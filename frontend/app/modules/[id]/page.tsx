@@ -7,6 +7,8 @@ import { Header } from "@/components/header"
 import { AnimatedBackground } from "@/components/animated-background"
 import { Play, ArrowLeft, CheckCircle, Lock } from "lucide-react"
 import Link from "next/link"
+import { useState } from "react"
+import { VideoCallModal } from "@/components/video-call-modal"
 import { useParams } from "next/navigation"
 
 const moduleData = {
@@ -82,6 +84,7 @@ const moduleData = {
 
 function ModuleDetailContent() {
   const params = useParams()
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const moduleId = params.id as string
   const module = moduleData[moduleId as keyof typeof moduleData]
 
@@ -189,21 +192,22 @@ function ModuleDetailContent() {
                     Ready to begin your medical simulation training? Click below to start the interactive scenario.
                   </p>
 
-                  <Link href={`/simulation/${moduleId}/1`}>
-                    <Button className="w-full" size="lg">
-                      <Play className="w-4 h-4 mr-2" />
-                      Begin Training
-                    </Button>
-                  </Link>
+                  <Button onClick={() => setIsModalOpen(true)} className="w-full" size="lg">
+                    <Play className="w-4 h-4 mr-2" />
+                    Begin Training
+                  </Button>
+                  
                 </CardContent>
               </Card>
             </div>
           </div>
         </div>
       </div>
+      <VideoCallModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   )
 }
+
 
 export default function ModuleDetailPage() {
   return (
