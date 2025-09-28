@@ -72,10 +72,22 @@ export function ChatModal({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Reset messages whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setMessages([]); // Reset chat
+      if (inputRef.current) inputRef.current.focus();
+      // Small timeout to ensure DOM renders before scrolling
+      setTimeout(scrollToBottom, 50);
+    }
+  }, [isOpen]);
+
+  // Scroll whenever messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -103,12 +115,12 @@ export function ChatModal({
     setNewMessage("");
     setIsLoading(true);
 
-      try {
-        const response = await apiClient.sendGroupMessage(
-          messageText,
-          currentStage,
-          selectedAgentType
-        );
+    try {
+      const response = await apiClient.sendGroupMessage(
+        messageText,
+        currentStage,
+        selectedAgentType
+      );
 
       if (response.status === "success") {
         const agentMessage: Message = {
@@ -121,7 +133,7 @@ export function ChatModal({
           agentType: response.agent_type,
         };
         setMessages((prev) => [...prev, agentMessage]);
-        
+
         // Update current stage if provided
         if (response.current_stage !== undefined) {
           setCurrentStage(response.current_stage);
@@ -195,7 +207,8 @@ export function ChatModal({
                     ? "Emergency Physician"
                     : selectedAgentType === "nurse"
                     ? "Emergency Nurse"
-                    : "AI Assistant"} • Stage {currentStage}
+                    : "AI Assistant"}{" "}
+                  • Stage {currentStage}
                 </p>
               </div>
             </div>

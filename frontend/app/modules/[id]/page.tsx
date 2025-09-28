@@ -15,24 +15,23 @@ const moduleData = {
     id: "emergency-triage",
     title: "Emergency Department Triage",
     description:
-      "Master the critical skills of emergency department triage through realistic patient scenarios. Learn to quickly assess patient conditions, prioritize care based on severity, and make life-saving decisions under pressure.",
-    category: "Emergency Medicine",
+      "Practice rapid assessment and prioritization in a busy emergency department. Multiple patients arrive at once, including a 55-year-old with chest pain. Quickly identify critical cases and decide the order of care.",
+    category: "Acute Care Simulation",
     context:
-      "You are working in a busy emergency department when multiple patients arrive simultaneously. Practice making rapid triage decisions to prioritize care based on severity and available resources.",
+      "You are working in a busy emergency department when multiple patients arrive simultaneously. Among them is a 55-year-old patient experiencing chest pain. Your task is to quickly assess each patient, determine the severity of their conditions, and prioritize care to ensure the most critical patients are treated first.",
     objectives: [
-      "Understand triage protocols and priority levels",
-      "Assess patient vital signs and symptoms quickly",
-      "Make critical decisions under time pressure",
-      "Communicate effectively with medical team",
-      "Document triage decisions accurately",
+      "Rapidly assess multiple patients using a structured framework.",
+      "Prioritize care based on urgency and resources.",
+      "Apply clinical reasoning to identify problems.",
+      "Improve communication, documentation, and decision-making skills.",
     ],
     scenario: {
       title: "Multi-Patient Emergency Triage",
       description:
-        "Multiple patients have arrived at the emergency department simultaneously following a multi-vehicle accident. You must quickly assess each patient and determine treatment priority.",
+        "Multiple patients have arrived at the emergency department simultaneously, including a 55-year-old experiencing chest pain. You must quickly assess each patient and determine treatment priority.",
       briefing:
-        "A highway accident has resulted in 6 patients arriving within minutes of each other. Resources are limited and you must make rapid triage decisions to ensure the most critical patients receive immediate care.",
-    },
+        "Several patients arrive at the emergency department at the same time. Among them is a 55-year-old with chest pain. Resources are limited, so you must rapidly assess each patient and ensure the most critical cases receive immediate care.",
+    }
   },
   "patient-communication": {
     id: "patient-communication",
