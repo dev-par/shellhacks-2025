@@ -42,18 +42,50 @@ async def display_state(
         # Format the output with clear sections
         print(f"\n{'-' * 10} {label} {'-' * 10}")
 
-        # Handle the user name
-        user_name = session.state.get("user_name", "Unknown")
-        print(f"👤 User: {user_name}")
-
-        # Handle reminders
-        reminders = session.state.get("reminders", [])
-        if reminders:
-            print("📝 Reminders:")
-            for idx, reminder in enumerate(reminders, 1):
-                print(f"  {idx}. {reminder}")
+        # Handle patient information
+        patient_info = session.state.get("patient_information", {})
+        if patient_info:
+            patient_name = patient_info.get("patient_name", "Unknown")
+            patient_age = patient_info.get("patient_age", "Unknown")
+            print(f"👤 Patient: {patient_name} (Age: {patient_age})")
+            
+            # Display vitals if available
+            static_data = patient_info.get("static_patient_data", {})
+            vitals = static_data.get("vitals_snapshot", {})
+            if vitals:
+                print(f"📊 Vitals:")
+                print(f"  • BP: {vitals.get('BP_Systolic', 'N/A')}/{vitals.get('BP_Diastolic', 'N/A')}")
+                print(f"  • HR: {vitals.get('HR', 'N/A')} bpm")
+                print(f"  • O2 Sat: {vitals.get('O2_Sat', 'N/A')}% ({vitals.get('O2_Source', 'N/A')})")
+                print(f"  • Pain Score: {vitals.get('Pain_Score', 'N/A')}/10")
+            
+            # Display history if available
+            history = static_data.get("history", {})
+            if history:
+                print(f"📋 History:")
+                print(f"  • Complaint: {history.get('Complaint', 'N/A')}")
+                print(f"  • Known History: {history.get('Known_History', 'N/A')}")
+                print(f"  • Allergies: {history.get('Allergies', 'N/A')}")
         else:
-            print("📝 Reminders: None")
+            print("👤 Patient: No patient information available")
+
+        # Handle session flags
+        session_flags = session.state.get("session_flags", {})
+        if session_flags:
+            print(f"🚩 Session Flags:")
+            for flag, value in session_flags.items():
+                status = "✅" if value else "❌"
+                print(f"  {status} {flag.replace('_', ' ').title()}")
+        else:
+            print("🚩 Session Flags: None")
+
+        # Handle any other state variables (for backward compatibility)
+        other_keys = set(session.state.keys()) - {"patient_information", "session_flags"}
+        if other_keys:
+            print(f"📝 Other State:")
+            for key in other_keys:
+                value = session.state.get(key)
+                print(f"  • {key}: {value}")
 
         print("-" * (22 + len(label)))
     except Exception as e:
@@ -147,7 +179,7 @@ async def call_agent_async(runner, user_id, session_id, query):
     await display_state(
         runner.session_service,
         runner.app_name,
-        runner.pa,
+        user_id,
         session_id,
         "State AFTER processing",
     )
