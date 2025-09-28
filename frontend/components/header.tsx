@@ -1,43 +1,68 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link"
 
 export function Header() {
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  // Check if user is already authenticated
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/profile', {
+          credentials: 'include' 
+        });
+        setIsAuthenticated(response.ok);
+      } catch (error) {
+        setIsAuthenticated(false);
+      }
+    };
+    
+    checkAuth();
+  }, []);
+
+  const handleLogin = () => {
+    setIsLoading(true);
+    // Redirect to your backend login endpoint
+    window.location.href = 'http://localhost:5000/login';
+  };
+
   return (
-    <header className="border-b border-border/30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="border-b border-border/30 bg-white backdrop-blur">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 via-purple-600 to-blue-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">MS</span>
-            </div>
             <span className="font-bold text-xl gradient-text">MedSimPro</span>
           </Link>
-
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/modules" className="text-muted-foreground hover:text-foreground transition-colors">
-              Training Modules
-            </Link>
-            <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
-              About
-            </Link>
-            <Link href="/contact" className="text-muted-foreground hover:text-foreground transition-colors">
-              Contact
-            </Link>
-          </nav>
         </div>
 
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <Link href="/login">
-              <Button variant="ghost" className="backdrop-blur-sm">
+            {!isAuthenticated ? (
+              <Button 
+                onClick={handleLogin}
+                variant="ghost" 
+                className="backdrop-blur-sm border border-black cursor-pointer"
+              >
                 Sign In
               </Button>
-            </Link>
+            ) : isAuthenticated && (
+              <Button 
+                onClick={() => router.push('/modules')}
+                variant="ghost" 
+                className="backdrop-blur-sm border border-black cursor-pointer"
+              >
+                Training Modules
+              </Button>
+            )}
             <Link href="/signup">
-              <Button className="bg-gradient-to-r from-blue-500 via-purple-600 to-blue-700 hover:from-blue-600 hover:via-purple-700 hover:to-blue-800">
+              <Button className="bg-gradient-to-r from-[#60adecff] via-[#5A8FD8] to-[#3e4175ff] hover:from-[#60adecff] hover:via-[#5A8FD8] hover:to-[#3e4175ff] cursor-pointer">
                 Get Started
               </Button>
             </Link>
