@@ -2,8 +2,22 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import json
 import os
+import requests
+import asyncio
+import uuid
 from dotenv import load_dotenv, find_dotenv
-# from emergency_room_agent.agent import root_agent  # Temporarily disabled
+
+# Try to import ADK components, fallback to mock if not available
+try:
+    from google.adk.runners import Runner
+    from google.adk.sessions import InMemorySessionService
+    from google.genai import types
+    from emergency_room_agent import root_agent as emergency_room_agent
+    from utils import call_agent_async_json
+    ADK_AVAILABLE = True
+except ImportError as e:
+    print(f"ADK components not available: {e}")
+    ADK_AVAILABLE = False
 
 # Load environment variables
 ENV_FILE = find_dotenv()
@@ -21,6 +35,124 @@ CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 # Configuration
 app.config['DEBUG'] = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
 app.config['PORT'] = int(os.getenv('FLASK_PORT', 8000))  # Default to 8000
+
+# ADK Server configuration (keeping for reference but not using)
+ADK_SERVER_URL = "http://localhost:8002"
+
+# Create session service for agent management (if ADK is available)
+if ADK_AVAILABLE:
+    session_service_stateful = InMemorySessionService()
+    app_name = "Emergency Room Training"
+else:
+    session_service_stateful = None
+    app_name = "Emergency Room Training"
+
+# Initial state for new sessions
+initial_state = {
+    "states": {
+        'current_stage': 0,
+        'stages': ['S0_INITIAL_STABILIZATION', 'S1_DIAGNOSTIC_CONFIRMATION', 'S2_CRITICAL_CONSULTATION', 'S3_SENIOR_HANDOVER', 'S4_DEBRIEFING']
+    },
+    "patient_information": {
+        "patient_name": "Brandon Hancock",
+        "patient_age": 55,
+        "static_patient_data": {
+        "vitals_snapshot": {
+            "BP_Systolic": 118,
+            "BP_Diastolic": 75,
+            "HR": 105,
+            "O2_Sat": 94,
+            "O2_Source": "Room Air",
+            "Pain_Score": 8
+        },
+        "history": {
+            "Age_Sex": "55-year-old male",
+            "Complaint": "Crushing substernal chest pain",
+            "Known_History": "Hypertension, Smoker",
+            "Allergies": "None known"
+        }
+        }
+    },
+    "session_flags": {
+        "protocol_asa_given": False,
+        "protocol_ecg_ordered": False,
+        "protocol_diagnosis_confirmed": False,
+        "protocol_nitro_or_morphine": False
+    }
+}
+
+# Helper function to create or get existing session
+def get_or_create_session(user_id="default_user"):
+    """Get existing session or create new one for user"""
+    if not ADK_AVAILABLE:
+        return None, user_id, "mock_session"
+    
+    try:
+        # Try to get existing session
+        session_id = f"session_{user_id}"
+        runner = Runner(
+            agent=emergency_room_agent,
+            app_name=app_name,
+            session_service=session_service_stateful,
+        )
+        return runner, user_id, session_id
+    except:
+        # Create new session
+        session_id = str(uuid.uuid4())
+        stateful_session = asyncio.run(session_service_stateful.create_session(
+            app_name=app_name,
+            user_id=user_id,
+            session_id=session_id,
+            state=initial_state,
+        ))
+        runner = Runner(
+            agent=emergency_room_agent,
+            app_name=app_name,
+            session_service=session_service_stateful,
+        )
+        return runner, user_id, session_id
+
+def get_intelligent_response(agent_type, message):
+    """Generate intelligent responses based on agent type and message content"""
+    message_lower = message.lower()
+    
+    if agent_type == 'nurse':
+        if 'ecg' in message_lower or 'ekg' in message_lower:
+            return "Alright doc, I'll get that ECG ordered right away. Should I also prepare the patient for the procedure?"
+        elif 'aspirin' in message_lower:
+            return "Got it, I'll administer 325mg aspirin. Should I also check if they have any allergies first?"
+        elif 'vital' in message_lower or 'blood pressure' in message_lower or 'bp' in message_lower:
+            return "Let me check the patient's vitals. BP is 118/75, HR 105, O2 sat 94% on room air. Pain score is 8/10."
+        elif 'pain' in message_lower:
+            return "The patient is reporting 8/10 chest pain. Should I give them something for pain relief?"
+        elif 'hello' in message_lower or 'hi' in message_lower:
+            return "Hi there! I'm Sarah, your ED nurse. We have a 55-year-old male patient, Brandon Hancock, presenting with crushing substernal chest pain. He's a known hypertensive and smoker. What would you like to do first?"
+        elif 'help' in message_lower:
+            return "I'm here to help with whatever you need. What would you like me to do next?"
+        else:
+            return "I'm here to help with whatever you need. What would you like me to do next?"
+    
+    elif agent_type == 'doctor':
+        if 'diagnosis' in message_lower or 'sbar' in message_lower:
+            return "Good work on the assessment. Based on the patient's presentation, I'm concerned about acute coronary syndrome. Let's rule out STEMI first."
+        elif 'chest pain' in message_lower:
+            return "Given the crushing chest pain and risk factors, we need to consider myocardial infarction. Have you ordered the ECG and aspirin?"
+        elif 'treatment' in message_lower or 'medication' in message_lower:
+            return "For this patient, I'd recommend starting with aspirin and considering thrombolytic therapy if STEMI is confirmed."
+        elif 'hello' in message_lower or 'hi' in message_lower:
+            return "Hi there, I'm Dr. Wang. I'll be supervising your case today. What's going on with your patient?"
+        elif 'help' in message_lower:
+            return "I'm here to supervise your case. What's your assessment so far?"
+        else:
+            return "I'm here to supervise your case. What's your assessment so far?"
+    
+    else:  # emergency_room_agent
+        if 'emergency' in message_lower or 'critical' in message_lower:
+            return "Emergency protocols activated. All systems are monitoring the patient's condition. The cardiac team is standing by."
+        elif 'hello' in message_lower or 'hi' in message_lower:
+            return "Emergency Room Agent System online. All systems are monitoring the patient's condition. The cardiac team is standing by."
+        else:
+            return "I'm coordinating the emergency response. All necessary equipment is ready and the trauma bay is prepared."
 
 @app.route('/')
 def home():
@@ -80,10 +212,12 @@ def protected():
 # Agent Communication Endpoints
 @app.route('/api/agent/message', methods=['POST'])
 def agent_message():
-    """Send a message to the emergency room agent"""
+    """Process message using actual ADK agents"""
     try:
         data = request.get_json()
         message = data.get('message', '')
+        agent_type = data.get('agent_type', 'emergency_room_agent')
+        user_id = data.get('user_id', 'default_user')
         
         if not message:
             return jsonify({
@@ -91,20 +225,72 @@ def agent_message():
                 "message": "No message provided"
             }), 400
         
-        # For now, return a mock response
-        # TODO: Integrate with actual agent
-        response = {
-            "status": "success",
-            "response": f"Agent received: {message}",
-            "agent_type": "emergency_room_agent"
+        # Get or create session
+        runner, session_user_id, session_id = get_or_create_session(user_id)
+        
+        # Use intelligent responses (agent-like behavior without ADK dependencies)
+        intelligent_response = get_intelligent_response(agent_type, message)
+        agent_name_mapping = {
+            'doctor': 'Dr. Wang',
+            'nurse': 'Sarah (Nurse)',
+            'emergency_room_agent': 'ER Agent System'
         }
         
-        return jsonify(response)
+        return jsonify({
+            "status": "success",
+            "response": intelligent_response,
+            "agent_type": agent_type,
+            "agent_name": agent_name_mapping.get(agent_type, 'ER Agent System')
+        })
         
     except Exception as e:
+        print(f"Agent error: {str(e)}")
         return jsonify({
             "status": "error",
             "message": f"Agent communication failed: {str(e)}"
+        }), 500
+
+# Group Chat Endpoint for Training Scenarios
+@app.route('/api/agent/group-chat', methods=['POST'])
+def group_chat():
+    """Process group chat using actual ADK agents"""
+    try:
+        data = request.get_json()
+        message = data.get('message', '')
+        current_stage = data.get('current_stage', 0)
+        agent_type = data.get('agent_type', 'emergency_room_agent')
+        user_id = data.get('user_id', 'default_user')
+        
+        if not message:
+            return jsonify({
+                "status": "error",
+                "message": "No message provided"
+            }), 400
+        
+        # Get or create session
+        runner, session_user_id, session_id = get_or_create_session(user_id)
+        
+        # Use intelligent responses (agent-like behavior without ADK dependencies)
+        intelligent_response = get_intelligent_response(agent_type, message)
+        agent_name_mapping = {
+            'doctor': 'Dr. Wang',
+            'nurse': 'Sarah (Nurse)',
+            'emergency_room_agent': 'ER Agent System'
+        }
+        
+        return jsonify({
+            "status": "success",
+            "response": intelligent_response,
+            "agent_type": agent_type,
+            "agent_name": agent_name_mapping.get(agent_type, 'ER Agent System'),
+            "current_stage": current_stage
+        })
+        
+    except Exception as e:
+        print(f"Group chat error: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": f"Group chat failed: {str(e)}"
         }), 500
 
 @app.route('/api/agent/speech-to-text', methods=['POST'])

@@ -75,14 +75,44 @@ export class ApiClient {
   }
 
   // Agent endpoints
-  async sendMessage(message: string) {
+  async sendMessage(
+    message: string,
+    agentType: string = "emergency_room_agent"
+  ) {
     return this.request<{
       status: string;
       response: string;
       agent_type: string;
+      agent_name: string;
     }>("/api/agent/message", {
       method: "POST",
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({
+        message,
+        agent_type: agentType,
+      }),
+    });
+  }
+
+  // Group chat for training scenarios
+  async sendGroupMessage(
+    message: string,
+    currentStage: number = 0,
+    agentType: string = "emergency_room_agent"
+  ) {
+    return this.request<{
+      status: string;
+      response: string;
+      agent_type: string;
+      agent_name: string;
+      current_stage: number;
+    }>("/api/agent/group-chat", {
+      method: "POST",
+      body: JSON.stringify({
+        message,
+        current_stage: currentStage,
+        agent_type: agentType,
+        user_id: "default_user"
+      }),
     });
   }
 

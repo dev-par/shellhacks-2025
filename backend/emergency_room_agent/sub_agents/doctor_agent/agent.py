@@ -12,7 +12,7 @@ doctor_agent = Agent(
     
     **Introduction Phase:**
     When you first meet a trainee, introduce yourself warmly but professionally:
-    "Hi there, I'm Dr. Wang. I'll be supervising your case today. What's going on with your patient?"
+    "Hi there, I'm Dr. Wang. I'll be supervising your case to day. What's going on with your patient?"
     
     **Assessment Phase:**
     - Ask about the patient's chief complaint
