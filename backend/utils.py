@@ -1,6 +1,16 @@
 from datetime import datetime
+import json
+import warnings
+import sys
+import os
+from contextlib import redirect_stderr
+from io import StringIO
 
 from google.genai import types
+
+# Suppress ADK warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+os.environ["PYTHONWARNINGS"] = "ignore"
 
 
 # ANSI color codes for terminal output
@@ -155,7 +165,6 @@ async def call_agent_async(runner, user_id, session_id, query):
     )
     final_response_text = None
 
-    # Display state before processing
     """
     await display_state(
         runner.session_service,
@@ -189,3 +198,57 @@ async def call_agent_async(runner, user_id, session_id, query):
     """
 
     return final_response_text
+
+
+async def process_agent_response_json(event):
+    """Process and return only final agent responses with author and message."""
+    # Only process final responses with actual text content
+    if not event.is_final_response():
+        return None
+    
+    # Extract message from final response
+    message = None
+    if event.content and event.content.parts:
+        for part in event.content.parts:
+            if hasattr(part, "text") and part.text and not part.text.isspace():
+                message = part.text.strip()
+                break
+    
+    # Only return if we have a valid message
+    if message:
+        return {
+            "author": event.author,
+            "message": message
+        }
+    
+    return None
+
+
+async def call_agent_async_json(runner, user_id, session_id, query):
+    """Call the agent asynchronously and return only final responses in JSON format."""
+    content = types.Content(role="user", parts=[types.Part(text=query)])
+    
+    final_response = None
+    
+    # Suppress stderr to hide ADK warnings
+    with redirect_stderr(StringIO()):
+        try:
+            async for event in runner.run_async(
+                user_id=user_id, session_id=session_id, new_message=content
+            ):
+                # Process each event and get JSON response
+                response_data = await process_agent_response_json(event)
+                if response_data:  # Only final responses with valid messages
+                    final_response = response_data
+                    
+        except Exception as e:
+            final_response = {
+                "author": "system",
+                "message": f"Error during agent call: {e}"
+            }
+    
+    # Print ONLY the final JSON response - nothing else
+    if final_response:
+        print(json.dumps(final_response))
+    
+    return final_response

@@ -1,12 +1,13 @@
 import asyncio
 import uuid
+import json
 
 from dotenv import load_dotenv
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
 from emergency_room_agent import root_agent as emergency_room_agent
-from utils import call_agent_async
+from utils import call_agent_async_json
 
 load_dotenv()
 
@@ -61,18 +62,11 @@ async def main():
         session_id=SESSION_ID,
         state=initial_state,
     )
-    print("CREATED NEW SESSION:")
-    print(f"\tSession ID: {SESSION_ID}")
-
     runner = Runner(
         agent=emergency_room_agent,
         app_name=APP_NAME,
         session_service=session_service_stateful,
     )
-
- # ===== PART 5: Interactive Conversation Loop =====
-    print("\nWelcome to the Emergency Room Training!")
-    print("Type 'exit' or 'quit' to end the conversation.\n")
 
     while True:
         # Get user input
@@ -80,22 +74,10 @@ async def main():
 
         # Check if user wants to exit
         if user_input.lower() in ["exit", "quit"]:
-            print("Ending conversation. Goodbye!")
             break
 
-        # Process the user query through the agent
-        await call_agent_async(runner, USER_ID, SESSION_ID, user_input)
-
-
-    print("==== Session Event Exploration ====")
-    session = await session_service_stateful.get_session(
-        app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID
-    )
-
-    # Log final Session state
-    print("=== Final Session State ===")
-    for key, value in session.state.items():
-        print(f"{key}: {value}")
+        # Process the user query through the agent with JSON output
+        await call_agent_async_json(runner, USER_ID, SESSION_ID, user_input)
 
 
 if __name__ == "__main__":
