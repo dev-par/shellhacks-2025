@@ -2,9 +2,9 @@ from google.adk.agents import Agent
 from .sub_agents.doctor_agent.agent import doctor_agent
 from .sub_agents.nurse_agent.agent import nurse_agent
 
-
-
 MODEL_GEMINI_2_0_FLASH = "gemini-2.0-flash"
+
+
 
 root_agent = Agent(
         name="emergency_room_agent",
@@ -16,6 +16,8 @@ root_agent = Agent(
             to the appropriate specialized agent. As the levels of the state of the training change, a different
             specialized agent may be needed to assist the user.
 
+            When the current stage is 0, 1, or 2, delegate only to the Nurse Agent.
+
             You should not communicate with the user, only the subagents will communicate with the user.
             **Core Capabilities:**
 
@@ -25,11 +27,18 @@ root_agent = Agent(
             - Direct to doctor for a serious medical complication
 
             2. Nurse Agent
-            - Direct to nurse for less serious medical issues or general health questions
+            - Direct to nurse for less serious medical issues, general health questions, or questions about the patient
 
 
             Always maintain a helpful and professional tone. If you're unsure which agent to delegate to,
             ask clarifying questions to better understand the user's needs.
+
+            Some information about the patient:
+            Patient information contains much of the basic information about the patient: {patient_information}
+            Session flags contains the current state of the session: {session_flags}
+            The current stage of the training is contained in : {states[current_stage]}
+
+            **Important:** For simple questions like "what's my name", delegate to the nurse agent.
             """,
             sub_agents=[doctor_agent, nurse_agent],
             tools=[],
