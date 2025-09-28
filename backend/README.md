@@ -1,3 +1,11 @@
+## Backend Run
+```
+npm install express body-parser cors dotenv
+npm install passport passport-auth0 express-session
+npm install @veramo/core @veramo/cli @veramo/did-resolver @veramo/credential-w3c
+```
+
+## Agent Testing
 ```bash
 
 # Create
