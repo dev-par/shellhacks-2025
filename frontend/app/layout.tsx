@@ -1,7 +1,8 @@
 import "./globals.css";
+import { AuthProviderWrapper } from "@/lib/auth0-provider";
 
 export const metadata = {
-  title: "My App",
+  title: "RespondER - Emergency Room Training",
 };
 
 export default function RootLayout({
@@ -12,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <AuthProviderWrapper>{children}</AuthProviderWrapper>
       </body>
     </html>
   );

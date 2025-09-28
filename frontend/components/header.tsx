@@ -1,34 +1,20 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/use-auth";
 import { useRouter } from "next/navigation";
-import Link from "next/link"
+import Link from "next/link";
 
 export function Header() {
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, login, logout } = useAuth();
   const router = useRouter();
 
-  // Check if user is already authenticated
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('http://localhost:5000/api/profile', {
-          credentials: 'include' 
-        });
-        setIsAuthenticated(response.ok);
-      } catch (error) {
-        setIsAuthenticated(false);
-      }
-    };
-    
-    checkAuth();
-  }, []);
-
   const handleLogin = () => {
-    // Redirect to your backend login endpoint
-    window.location.href = 'http://localhost:5000/login';
+    login();
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -44,29 +30,41 @@ export function Header() {
           <div className="flex items-center space-x-2">
             {!isAuthenticated ? (
               <div>
-                <Button 
+                <Button
                   onClick={handleLogin}
-                  variant="ghost" 
+                  variant="ghost"
                   className="backdrop-blur-sm border border-black cursor-pointer"
                 >
                   Sign In
                 </Button>
-                <Button onClick={handleLogin} className="bg-gradient-to-r from-[#60adecff] via-[#5A8FD8] to-[#3e4175ff] hover:from-[#60adecff] hover:via-[#5A8FD8] hover:to-[#3e4175ff] cursor-pointer">
+                <Button
+                  onClick={handleLogin}
+                  className="bg-gradient-to-r from-[#60adecff] via-[#5A8FD8] to-[#3e4175ff] hover:from-[#60adecff] hover:via-[#5A8FD8] hover:to-[#3e4175ff] cursor-pointer"
+                >
                   Get Started
                 </Button>
               </div>
-            ) : isAuthenticated && (
-              <Button 
-                onClick={() => router.push('/modules')}
-                variant="ghost" 
-                className="backdrop-blur-sm border border-black cursor-pointer"
-              >
-                Training Modules
-              </Button>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button
+                  onClick={() => router.push("/modules")}
+                  variant="ghost"
+                  className="backdrop-blur-sm border border-black cursor-pointer"
+                >
+                  Training Modules
+                </Button>
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  className="cursor-pointer"
+                >
+                  Logout
+                </Button>
+              </div>
             )}
           </div>
         </div>
       </div>
     </header>
-  )
+  );
 }

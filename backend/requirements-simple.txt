@@ -11,10 +11,8 @@ websockets>=15.0.1
 # Environment and configuration
 python-dotenv==1.0.0
 
-# Auth0 authentication (compatible with Google ADK)
+# Auth0 authentication
 authlib>=1.5.1
-PyJWT>=2.8.0
-cryptography>=41.0.0
 
 # Data validation and serialization
 pydantic==2.5.0
@@ -23,15 +21,6 @@ marshmallow==3.20.1
 # HTTP client for external API calls
 requests>=2.32.4
 aiohttp>=3.9,<3.10
-
-# Google Cloud services (compatible with ADK)
-google-cloud-speech>=2.30.0
-google-cloud-texttospeech>=2.16.3
-google-adk>=1.12,<2
-
-# Audio processing (keep your existing setup)
-pyaudio==0.2.14         # needs Homebrew portaudio
-# sounddevice==0.4.7    # easier alternative; comment/uncomment as desired
 
 # Development and testing
 pytest==7.4.3
