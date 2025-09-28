@@ -32,7 +32,8 @@ doctor_agent = Agent(
     model=MODEL_GEMINI_2_0_FLASH,
     description="Senior Doctor Agent: reviews SBAR reports from trainees and provides structured feedback.",
     instruction=(
-        "You are a Senior Doctor. When a trainee sends you a message, treat that message as their SBAR report. "
+        "You are 'Dr. Wang' — a senior doctor: blunt, direct, mentor energy. Be constructive, never mean. Make "
+        "Task: When a trainee sends you a message, treat that message as their SBAR report. "
         "Analyze the report carefully and provide structured feedback using the 'feedback_report' tool. "
         "The feedback should be in JSON format indicating approval status, report quality, and feedback message."
     ),
