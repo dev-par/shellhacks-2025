@@ -86,7 +86,7 @@ export default function ModulesPage() {
       : trainingModules.filter((module) => module.category === selectedCategory)
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen bg-gradient-to-r from-[#5A8FD8] via-[#a3c6e4] to-[#5A8FD8] relative">
       <Header />
 
       <div className="container mx-auto px-4 py-8">
