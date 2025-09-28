@@ -30,3 +30,6 @@ Thumbs.db
 
 # Pycache
 __pycache__/
+
+# Google Cloud
+google-cloud-credentials.json
