@@ -205,25 +205,10 @@ class STEMITestSession:
         session = await self.session_service.get_session(
             app_name=self.app_name, user_id=self.user_id, session_id=self.session_id
         )
-        update_interventions(command, session.state["interventions"], session.state["patient_data"])
         
         # Check for state transition
         current_state = session.state["current_state"]
-        transition_check = check_state_transition(
-            current_state, 
-            session.state["interventions"], 
-            session.state["patient_data"]
-        )
-        
-        if transition_check["transition_allowed"]:
-            # Update state
-            session.state["current_state"] = transition_check["new_state"]
-            print(f"🔄 State Transition: {current_state} → {transition_check['new_state']}")
-            print(f"📝 {transition_check['description']}")
-        else:
-            print(f"⏳ Current State: {current_state}")
-            if "reason" in transition_check:
-                print(f"💡 {transition_check['reason']}")
+    
         
         # Add to interaction history
         await add_user_query_to_history(
@@ -380,19 +365,10 @@ async def interactive_mode():
         session = await session_service.get_session(
             app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID
         )
-        update_interventions(user_input, session.state["interventions"], session.state["patient_data"])
         
         # Check for state transition
         current_state = session.state["current_state"]
-        transition_check = check_state_transition(
-            current_state, 
-            session.state["interventions"], 
-            session.state["patient_data"]
-        )
         
-        if transition_check["transition_allowed"]:
-            session.state["current_state"] = transition_check["new_state"]
-            print(f"🔄 State Transition: {current_state} → {transition_check['new_state']}")
 
         # Process command
         await add_user_query_to_history(
