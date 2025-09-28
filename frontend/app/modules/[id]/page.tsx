@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Header } from "@/components/header"
-import { Play, ArrowLeft, CheckCircle, Lock } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
-import { VideoCallModal } from "@/components/video-call-modal"
-import { useParams } from "next/navigation"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Header } from "@/components/header";
+import { Play, ArrowLeft, CheckCircle, Lock } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { ChatModal } from "@/components/chat-modal";
+import { useParams } from "next/navigation";
 
 const moduleData = {
   "emergency-triage": {
@@ -60,7 +60,8 @@ const moduleData = {
   "diagnostic-reasoning": {
     id: "diagnostic-reasoning",
     title: "Clinical Diagnostic Reasoning",
-    description: "Develop systematic approaches to differential diagnosis and clinical decision-making.",
+    description:
+      "Develop systematic approaches to differential diagnosis and clinical decision-making.",
     category: "Diagnostics",
     context:
       "Work through complex cases where symptoms could indicate multiple conditions. Practice systematic diagnostic thinking and evidence-based decision making.",
@@ -79,13 +80,13 @@ const moduleData = {
         "A 38-year-old patient presents with fatigue, joint pain, and skin changes. Multiple conditions could explain these symptoms. Work through a systematic diagnostic approach.",
     },
   },
-}
+};
 
 function ModuleDetailContent() {
-  const params = useParams()
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const moduleId = params.id as string
-  const module = moduleData[moduleId as keyof typeof moduleData]
+  const params = useParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const moduleId = params.id as string;
+  const module = moduleData[moduleId as keyof typeof moduleData];
 
   if (!module) {
     return (
@@ -95,7 +96,9 @@ function ModuleDetailContent() {
           <div className="container mx-auto px-4 py-20">
             <div className="max-w-md mx-auto text-center">
               <h1 className="text-2xl font-bold mb-4">Module Not Found</h1>
-              <p className="text-muted-foreground mb-6">The requested training module could not be found.</p>
+              <p className="text-muted-foreground mb-6">
+                The requested training module could not be found.
+              </p>
               <Link href="/modules">
                 <Button>Back to Modules</Button>
               </Link>
@@ -103,7 +106,7 @@ function ModuleDetailContent() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -113,7 +116,10 @@ function ModuleDetailContent() {
 
         <div className="container mx-auto px-4 py-8">
           <div className="mb-6">
-            <Link href="/modules" className="inline-flex items-center text-black mb-4">
+            <Link
+              href="/modules"
+              className="inline-flex items-center text-black mb-4"
+            >
               <ArrowLeft className="w-4 h-4 mr-2 text-black" />
               Back to Modules
             </Link>
@@ -127,7 +133,9 @@ function ModuleDetailContent() {
               </Badge>
             </div>
             <h1 className="text-3xl font-bold mb-4">{module.title}</h1>
-            <p className="text-black text-lg leading-relaxed">{module.description}</p>
+            <p className="text-black text-lg leading-relaxed">
+              {module.description}
+            </p>
           </div>
 
           {/* Two-column grid below */}
@@ -150,7 +158,9 @@ function ModuleDetailContent() {
                 <CardContent>
                   <div className="space-y-4">
                     <div className="p-4 border border-border/50 rounded-lg backdrop-blur-sm">
-                      <h4 className="font-medium mb-2">{module.scenario.title}</h4>
+                      <h4 className="font-medium mb-2">
+                        {module.scenario.title}
+                      </h4>
                       <p className="text-sm text-muted-foreground mb-3">
                         {module.scenario.description}
                       </p>
@@ -176,8 +186,8 @@ function ModuleDetailContent() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground">
-                    Ready to begin your medical simulation training? Click below to
-                    start the interactive scenario.
+                    Ready to begin your medical simulation training? Click below
+                    to start the interactive scenario.
                   </p>
                   <Button
                     onClick={() => setIsModalOpen(true)}
@@ -209,14 +219,18 @@ function ModuleDetailContent() {
           </div>
         </div>
       </div>
-      <VideoCallModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <ChatModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        recipientName="Alice"
+        recipientAvatar="/alice-avatar.png"
+        currentUserName="You"
+        currentUserAvatar="/your-avatar.png"
+      />
     </div>
-  )
+  );
 }
 
-
 export default function ModuleDetailPage() {
-  return (
-      <ModuleDetailContent />
-  )
+  return <ModuleDetailContent />;
 }

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/header";
-import { VideoCallModal } from "@/components/video-call-modal";
+import { ChatModal } from "@/components/chat-modal";
 import { AuthDashboard } from "@/components/auth-dashboard";
 import { useAuth } from "@/lib/use-auth";
 import Link from "next/link";
@@ -81,9 +81,13 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <VideoCallModal
+          <ChatModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
+            recipientName="Alice"
+            recipientAvatar="/alice-avatar.png"
+            currentUserName="You"
+            currentUserAvatar="/your-avatar.png"
           />
         </section>
       )}
