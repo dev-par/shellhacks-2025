@@ -12,12 +12,17 @@ export default function HomePage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  const handleLogin = () => {
+    // Redirect to your backend login endpoint
+    window.location.href = 'http://localhost:5000/login';
+  };
+
   return (
     <div className="min-h-screen relative">
       <Header />
 
       {/* Hero Section */}
-      <section className="relative py-20 lg:py-32 bg-[#D0E4F5]">
+      <section className="relative py-20 lg:py-32 bg-gradient-to-r from-[#5A8FD8] via-[#a3c6e4] to-[#5A8FD8]">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-white text-sm font-medium mb-6 backdrop-blur-sm">
@@ -35,15 +40,14 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/signup">
-                <Button
-                  size="lg"
-                  className="text-lg px-8 py-6 bg-gradient-to-r from-[#60adecff] via-[#5A8FD8] to-[#3e4175ff] hover:from-[#60adecff] hover:via-[#5A8FD8] hover:to-[#3e4175ff] cursor-pointer"
-                >
-                  Start Training
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
-              </Link>
+              <Button
+                onClick={handleLogin}
+                size="lg"
+                className="text-lg px-8 py-6 bg-gradient-to-r from-[#60adecff] via-[#5A8FD8] to-[#3e4175ff] hover:from-[#60adecff] hover:via-[#5A8FD8] hover:to-[#3e4175ff] cursor-pointer"
+              >
+                Start Training
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
               <Button
                 onClick={() => setIsModalOpen(true)}
                 variant="outline"
@@ -80,10 +84,10 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-[#D0E4F5]">
+      <section className="py-20 bg-gradient-to-r from-[#5A8FD8] via-[#a3c6e4] to-[#5A8FD8]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4 gradient-text">Advanced Training Features</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold mb-4 gradient-text pb-4">Advanced Training Features</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Experience the future of medical education with our comprehensive AI-powered platform
             </p>
@@ -147,9 +151,9 @@ export default function HomePage() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <span className="font-bold text-xl gradient-text">MedSimPro</span>
+              <span className="font-bold text-xl gradient-text">RespondER</span>
             </div>
-            <div className="text-muted-foreground text-sm">© 2025 MedSimPro. All rights reserved.</div>
+            <div className="text-muted-foreground text-sm">© 2025 RespondER. All rights reserved.</div>
           </div>
         </div>
       </footer>

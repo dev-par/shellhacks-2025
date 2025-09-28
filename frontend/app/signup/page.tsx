@@ -35,7 +35,7 @@ function SignupContent() {
         <div className="max-w-md mx-auto">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Join MedSimPro</CardTitle>
+              <CardTitle className="text-2xl">Join RespondER</CardTitle>
               <p className="text-muted-foreground">Start your medical training journey today</p>
             </CardHeader>
             <CardContent>

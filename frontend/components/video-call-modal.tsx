@@ -5,6 +5,7 @@ import {
   Dialog,
   DialogContent,
   DialogClose,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -21,6 +22,7 @@ import {
   Volume2,
   X,
 } from "lucide-react"
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 interface VideoCallModalProps {
   isOpen: boolean
@@ -35,9 +37,8 @@ interface TranscriptEntry {
 }
 
 const mockParticipants = [
-  { id: "1", name: "Sarah Chen", avatar: "/professional-woman-diverse.png" },
-  { id: "2", name: "Marcus Johnson", avatar: "/professional-man.jpg" },
-  { id: "3", name: "Elena Rodriguez", avatar: "/latina-professional-woman.png" },
+  { id: "1", name: "Sarah Chen", avatar: "/placeholder-user.jpg" },
+  { id: "2", name: "Marcus Johnson", avatar: "/placeholder-user.jpg" },
 ]
 
 const mockTranscript: TranscriptEntry[] = [
@@ -52,12 +53,6 @@ const mockTranscript: TranscriptEntry[] = [
     speaker: "Marcus Johnson",
     text: "Morning Sarah! Ready to discuss the quarterly results.",
     timestamp: "09:00:22",
-  },
-  {
-    id: "3",
-    speaker: "Elena Rodriguez",
-    text: "Hi team, I have the latest analytics ready to share.",
-    timestamp: "09:00:28",
   },
 ]
 
@@ -110,8 +105,11 @@ export function VideoCallModal({ isOpen, onClose }: VideoCallModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl w-full h-[90vh] p-0 bg-card border-border flex rounded-2xl overflow-hidden">
+      <DialogContent className="max-w-7xl w-full h-[95vh] p-0 bg-card border-border flex rounded-2xl overflow-hidden">
         {/* Main Video Area */}
+        <VisuallyHidden>
+          <DialogTitle>Video Call</DialogTitle>
+        </VisuallyHidden>
         <div className="flex-1 flex flex-col bg-background">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b border-border">
@@ -165,30 +163,15 @@ export function VideoCallModal({ isOpen, onClose }: VideoCallModalProps) {
                 </Button>
               </div>
             ) : (
-              <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-4">
-                {/* Top row */}
+              <div className="w-full h-full grid grid-cols-1 grid-rows-2 gap-4">
                 {mockParticipants.slice(0, 2).map((p) => (
-                  <div key={p.id} className="aspect-square bg-muted rounded-lg relative overflow-hidden">
+                  <div key={p.id} className="aspect-square bg-muted rounded-lg relative overflow-hidden border border-black/10 border-2">
                     <img src={p.avatar} alt={p.name} className="w-full h-full object-cover" />
                     <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
                       {p.name}
                     </div>
                   </div>
                 ))}
-
-                {/* Bottom row: center single participant */}
-                <div className="col-span-2 flex justify-center">
-                  <div className="w-1/2 aspect-square bg-muted rounded-lg relative overflow-hidden">
-                    <img
-                      src={mockParticipants[2].avatar}
-                      alt={mockParticipants[2].name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
-                      {mockParticipants[2].name}
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
           </div>
