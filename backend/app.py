@@ -118,39 +118,45 @@ def get_intelligent_response(agent_type, message):
     
     if agent_type == 'nurse':
         if 'ecg' in message_lower or 'ekg' in message_lower:
-            return "Alright doc, I'll get that ECG ordered right away. Should I also prepare the patient for the procedure?"
+            return "Alright doc, I'll get that ECG ordered right away. Should I also prepare the patient for the procedure? The ECG machine is ready and I can have results in about 5 minutes."
         elif 'aspirin' in message_lower:
-            return "Got it, I'll administer 325mg aspirin. Should I also check if they have any allergies first?"
+            return "Got it, I'll administer 325mg aspirin. Should I also check if they have any allergies first? I'll make sure to document the time and dose."
         elif 'vital' in message_lower or 'blood pressure' in message_lower or 'bp' in message_lower:
-            return "Let me check the patient's vitals. BP is 118/75, HR 105, O2 sat 94% on room air. Pain score is 8/10."
+            return "Let me check the patient's vitals. BP is 118/75, HR 105, O2 sat 94% on room air. Pain score is 8/10. He's still complaining of that crushing chest pain."
         elif 'pain' in message_lower:
-            return "The patient is reporting 8/10 chest pain. Should I give them something for pain relief?"
+            return "The patient is reporting 8/10 chest pain. Should I give them something for pain relief? I can prepare morphine or nitroglycerin depending on what you think is appropriate."
         elif 'hello' in message_lower or 'hi' in message_lower:
             return "Hi there! I'm Sarah, your ED nurse. We have a 55-year-old male patient, Brandon Hancock, presenting with crushing substernal chest pain. He's a known hypertensive and smoker. What would you like to do first?"
         elif 'help' in message_lower:
-            return "I'm here to help with whatever you need. What would you like me to do next?"
+            return "I'm here to help with whatever you need. What would you like me to do next? I can check vitals, order tests, or prepare medications."
+        elif 'patient' in message_lower or 'status' in message_lower:
+            return "Brandon Hancock is a 55-year-old male with crushing substernal chest pain. Known hypertension and smoker. Vitals are stable but he's in significant pain. What's your plan?"
         else:
             return "I'm here to help with whatever you need. What would you like me to do next?"
     
     elif agent_type == 'doctor':
         if 'diagnosis' in message_lower or 'sbar' in message_lower:
-            return "Good work on the assessment. Based on the patient's presentation, I'm concerned about acute coronary syndrome. Let's rule out STEMI first."
+            return "Good work on the assessment. Based on the patient's presentation, I'm concerned about acute coronary syndrome. Let's rule out STEMI first with the ECG and start aspirin."
         elif 'chest pain' in message_lower:
-            return "Given the crushing chest pain and risk factors, we need to consider myocardial infarction. Have you ordered the ECG and aspirin?"
+            return "Given the crushing chest pain and risk factors, we need to consider myocardial infarction. Have you ordered the ECG and aspirin? Time is critical here."
         elif 'treatment' in message_lower or 'medication' in message_lower:
-            return "For this patient, I'd recommend starting with aspirin and considering thrombolytic therapy if STEMI is confirmed."
+            return "For this patient, I'd recommend starting with aspirin and considering thrombolytic therapy if STEMI is confirmed. Check the ECG results first."
         elif 'hello' in message_lower or 'hi' in message_lower:
-            return "Hi there, I'm Dr. Wang. I'll be supervising your case today. What's going on with your patient?"
+            return "Hi there, I'm Dr. Wang. I'll be supervising your case today. What's going on with your patient? I understand you have a chest pain case?"
         elif 'help' in message_lower:
-            return "I'm here to supervise your case. What's your assessment so far?"
+            return "I'm here to supervise your case. What's your assessment so far? Walk me through your differential diagnosis."
+        elif 'patient' in message_lower or 'status' in message_lower:
+            return "Tell me about your patient. What's the chief complaint and your initial assessment? I need to understand the clinical picture."
         else:
             return "I'm here to supervise your case. What's your assessment so far?"
     
     else:  # emergency_room_agent
         if 'emergency' in message_lower or 'critical' in message_lower:
-            return "Emergency protocols activated. All systems are monitoring the patient's condition. The cardiac team is standing by."
+            return "Emergency protocols activated. All systems are monitoring the patient's condition. The cardiac team is standing by and ready for immediate intervention."
         elif 'hello' in message_lower or 'hi' in message_lower:
             return "Emergency Room Agent System online. All systems are monitoring the patient's condition. The cardiac team is standing by."
+        elif 'patient' in message_lower or 'status' in message_lower:
+            return "System status: All emergency protocols are active. Patient monitoring systems are operational. The trauma bay is prepared for immediate response."
         else:
             return "I'm coordinating the emergency response. All necessary equipment is ready and the trauma bay is prepared."
 
