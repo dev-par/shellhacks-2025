@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Header } from "@/components/header"
-import { AuthProvider, useAuth } from "@/components/auth-context"
 import { AnimatedBackground } from "@/components/animated-background"
 import { WebRTCAudio } from "@/components/webrtc-audio"
 import {
@@ -80,7 +79,6 @@ const scenarioData = {
 }
 
 function SimulationContent() {
-  const { user } = useAuth()
   const params = useParams()
   const moduleId = params.moduleId as string
   const scenarioId = Number.parseInt(params.scenarioId as string)
@@ -469,8 +467,6 @@ function SimulationContent() {
 
 export default function SimulationPage() {
   return (
-    <AuthProvider>
       <SimulationContent />
-    </AuthProvider>
   )
 }

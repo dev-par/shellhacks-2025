@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
-import { useAuth } from "@/components/auth-context"
 import { Play, Lock } from "lucide-react"
 import Link from "next/link"
 
@@ -69,7 +68,6 @@ const trainingModules = [
 ]
 
 export default function ModulesPage() {
-  const { user } = useAuth()
   const [selectedCategory, setSelectedCategory] = useState("All")
 
   const categories = [
@@ -86,33 +84,6 @@ export default function ModulesPage() {
     selectedCategory === "All"
       ? trainingModules
       : trainingModules.filter((module) => module.category === selectedCategory)
-
-  if (!user) {
-    return (
-      <div className="min-h-screen relative">
-        <Header />
-        <div className="container mx-auto px-4 py-20">
-          <div className="max-w-md mx-auto text-center">
-            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
-              <Lock className="w-8 h-8 text-primary" />
-            </div>
-            <h1 className="text-2xl font-bold mb-4 gradient-text">Authentication Required</h1>
-            <p className="text-muted-foreground mb-6">
-              Please sign in to access the training modules and start your medical simulation training.
-            </p>
-            <Link href="/login">
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-blue-500 via-purple-600 to-blue-700 hover:from-blue-600 hover:via-purple-700 hover:to-blue-800"
-              >
-                Sign In to Continue
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen relative">

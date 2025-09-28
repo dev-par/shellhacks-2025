@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Header } from "@/components/header"
-import { AuthProvider, useAuth } from "@/components/auth-context"
 import { Users, Activity, TrendingUp, AlertTriangle, Clock, CheckCircle, Shield } from "lucide-react"
 import Link from "next/link"
 import { AdminUserManagement } from "@/components/admin-user-management"
@@ -76,28 +75,7 @@ const systemAlerts = [
 ]
 
 function AdminDashboardContent() {
-  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState("overview")
-
-  if (!user || user.role !== "admin") {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="container mx-auto px-4 py-20">
-          <div className="max-w-md mx-auto text-center">
-            <div className="w-16 h-16 bg-destructive/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Shield className="w-8 h-8 text-destructive" />
-            </div>
-            <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-            <p className="text-muted-foreground mb-6">You need administrator privileges to access this page.</p>
-            <Link href="/">
-              <Button>Return Home</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -253,8 +231,6 @@ function AdminDashboardContent() {
 
 export default function AdminDashboardPage() {
   return (
-    <AuthProvider>
       <AdminDashboardContent />
-    </AuthProvider>
   )
 }
