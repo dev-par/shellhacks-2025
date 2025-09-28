@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Header } from "@/components/header"
-import { AuthProvider, useAuth } from "@/components/auth-context"
 import { AnimatedBackground } from "@/components/animated-background"
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts"
 import { Trophy, Clock, Target, TrendingUp, Calendar, Award, Star, Activity, Lock } from "lucide-react"
@@ -56,31 +55,7 @@ const recentSessions = [
 ]
 
 function ResultsContent() {
-  const { user } = useAuth()
   const [selectedPeriod, setSelectedPeriod] = useState("6months")
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-background relative">
-        <AnimatedBackground />
-        <div className="relative z-10">
-          <Header />
-          <div className="container mx-auto px-4 py-20">
-            <div className="max-w-md mx-auto text-center">
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Lock className="w-8 h-8 text-primary" />
-              </div>
-              <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
-              <p className="text-muted-foreground mb-6">Please sign in to view your training results and analytics.</p>
-              <Link href="/login">
-                <Button size="lg">Sign In to Continue</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-background relative">
@@ -327,8 +302,6 @@ function ResultsContent() {
 
 export default function ResultsPage() {
   return (
-    <AuthProvider>
       <ResultsContent />
-    </AuthProvider>
   )
 }
