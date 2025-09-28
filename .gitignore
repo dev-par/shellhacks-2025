@@ -33,3 +33,8 @@ __pycache__/
 
 # Google Cloud
 google-cloud-credentials.json
+
+*venv
+venv
+.venv
+*.venv
