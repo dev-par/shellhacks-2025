@@ -41,10 +41,37 @@ root_agent = Agent(
             ask clarifying questions to better understand the user's needs.
 
             Some information about the patient:
-            Patient information contains much of the basic information about the patient: {patient_information}
-            Session flags contains the current state of the session: {session_flags}
-            The current stage of the training is contained in : {states[current_stage]}
-
+            Patient information contains much of the basic information about the patient: 
+            "states": {
+        'current_stage': 0,
+        'stages': ['S0_INITIAL_STABILIZATION', 'S1_DIAGNOSTIC_CONFIRMATION', 'S2_CRITICAL_CONSULTATION', 'S3_SENIOR_HANDOVER', 'S4_DEBRIEFING']
+    },
+    "patient_information": {
+        "patient_name": "Brandon Hancock",
+        "patient_age": 55,
+        "static_patient_data": {
+        "vitals_snapshot": {
+            "BP_Systolic": 118,
+            "BP_Diastolic": 75,
+            "HR": 105,
+            "O2_Sat": 94,
+            "O2_Source": "Room Air",
+            "Pain_Score": 8
+        },
+        "history": {
+            "Age_Sex": "55-year-old male",
+            "Complaint": "Crushing substernal chest pain",
+            "Known_History": "Hypertension, Smoker",
+            "Allergies": "None known"
+        }
+        }
+    },
+    "session_flags": {
+        "protocol_asa_given": False,
+        "protocol_ecg_ordered": False,
+        "protocol_diagnosis_confirmed": False,
+        "protocol_nitro_or_morphine": False
+    }
             **Important:** For simple questions like "what's my name", delegate to the nurse agent.
             """,
             sub_agents=[doctor_agent, nurse_agent, evaluator_agent],
