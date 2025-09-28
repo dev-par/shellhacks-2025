@@ -1,4 +1,5 @@
 ## Backend Run
+
 ```
 npm install express body-parser cors dotenv
 npm install passport passport-auth0 express-session
@@ -6,6 +7,7 @@ npm install @veramo/core @veramo/cli @veramo/did-resolver @veramo/credential-w3c
 ```
 
 ## Agent Testing
+
 ```bash
 
 # Create
@@ -20,5 +22,7 @@ source .venv/bin/activate
 # Windows PowerShell:
 .venv\Scripts\Activate.ps1
 
-pip install google-adk
+pip install -r requirements.txt
+
+python main.py
 ```
