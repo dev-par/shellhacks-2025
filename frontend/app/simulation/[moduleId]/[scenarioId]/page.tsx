@@ -211,7 +211,7 @@ function SimulationContent() {
             <div className="max-w-md mx-auto text-center">
               <h1 className="text-2xl font-bold mb-4">Scenario Not Found</h1>
               <Link href="/modules">
-                <Button>Back to Modules</Button>
+                <Button className="text-black">Back to Modules</Button>
               </Link>
             </div>
           </div>

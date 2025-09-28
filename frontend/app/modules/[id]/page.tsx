@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
-import { AnimatedBackground } from "@/components/animated-background"
 import { Play, ArrowLeft, CheckCircle, Lock } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
@@ -91,7 +90,6 @@ function ModuleDetailContent() {
   if (!module) {
     return (
       <div className="min-h-screen relative">
-        <AnimatedBackground />
         <div className="relative z-10">
           <Header />
           <div className="container mx-auto px-4 py-20">
@@ -110,43 +108,89 @@ function ModuleDetailContent() {
 
   return (
     <div className="min-h-screen relative">
-      <AnimatedBackground />
       <div className="relative z-10">
         <Header />
 
         <div className="container mx-auto px-4 py-8">
           <div className="mb-6">
-            <Link href="/modules" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4">
-              <ArrowLeft className="w-4 h-4 mr-2" />
+            <Link href="/modules" className="inline-flex items-center text-black mb-4">
+              <ArrowLeft className="w-4 h-4 mr-2 text-black" />
               Back to Modules
             </Link>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2">
-              <div className="mb-6">
-                <div className="flex items-center gap-4 mb-4">
-                  <Badge variant="secondary" className="backdrop-blur-sm">
-                    {module.category}
-                  </Badge>
-                </div>
+          {/* Full width Title + Description */}
+          <div className="mb-10">
+            <div className="flex items-center gap-4 mb-4">
+              <Badge variant="secondary" className="backdrop-blur-sm">
+                {module.category}
+              </Badge>
+            </div>
+            <h1 className="text-3xl font-bold mb-4">{module.title}</h1>
+            <p className="text-black text-lg leading-relaxed">{module.description}</p>
+          </div>
 
-                <h1 className="text-3xl font-bold mb-4">{module.title}</h1>
-                <p className="text-muted-foreground text-lg leading-relaxed mb-6">{module.description}</p>
+          {/* Two-column grid below */}
+          <div className="grid lg:grid-cols-3 gap-8 items-start">
+            {/* Left Column */}
+            <div className="lg:col-span-2 space-y-6">
+              <Card className="backdrop-blur-sm bg-card/80 border-border/50">
+                <CardHeader>
+                  <CardTitle>Training Context</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-foreground/90">{module.context}</p>
+                </CardContent>
+              </Card>
 
-                <Card className="mb-6 backdrop-blur-sm bg-card/80 border-border/50">
-                  <CardHeader>
-                    <CardTitle>Training Context</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-foreground/90">{module.context}</p>
-                  </CardContent>
-                </Card>
-              </div>
+              <Card className="backdrop-blur-sm bg-card/80 border-border/50">
+                <CardHeader>
+                  <CardTitle>Training Scenario</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-4 border border-border/50 rounded-lg backdrop-blur-sm">
+                      <h4 className="font-medium mb-2">{module.scenario.title}</h4>
+                      <p className="text-sm text-muted-foreground mb-3">
+                        {module.scenario.description}
+                      </p>
+                      <div className="bg-muted/30 p-3 rounded-md backdrop-blur-sm">
+                        <p className="text-xs font-medium text-foreground/80 mb-1">
+                          Scenario Briefing:
+                        </p>
+                        <p className="text-xs text-foreground/70">
+                          {module.scenario.briefing}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
 
-              {/* Learning Objectives */}
-              <Card className="mb-6 backdrop-blur-sm bg-card/80 border-border/50">
+            {/* Right Column */}
+            <div className="lg:col-span-1 space-y-6 self-start">
+              <Card className="backdrop-blur-sm bg-card/80 border-border/50">
+                <CardHeader>
+                  <CardTitle>Start Training</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Ready to begin your medical simulation training? Click below to
+                    start the interactive scenario.
+                  </p>
+                  <Button
+                    onClick={() => setIsModalOpen(true)}
+                    className="w-full"
+                    size="lg"
+                  >
+                    <Play className="w-4 h-4 mr-2" />
+                    Begin Training
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="backdrop-blur-sm bg-card/80 border-border/50">
                 <CardHeader>
                   <CardTitle>Learning Objectives</CardTitle>
                 </CardHeader>
@@ -159,44 +203,6 @@ function ModuleDetailContent() {
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
-
-              <Card className="backdrop-blur-sm bg-card/80 border-border/50">
-                <CardHeader>
-                  <CardTitle>Training Scenario</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="p-4 border border-border/50 rounded-lg backdrop-blur-sm">
-                      <h4 className="font-medium mb-2">{module.scenario.title}</h4>
-                      <p className="text-sm text-muted-foreground mb-3">{module.scenario.description}</p>
-                      <div className="bg-muted/30 p-3 rounded-md backdrop-blur-sm">
-                        <p className="text-xs font-medium text-foreground/80 mb-1">Scenario Briefing:</p>
-                        <p className="text-xs text-foreground/70">{module.scenario.briefing}</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-8 backdrop-blur-sm bg-card/80 border-border/50">
-                <CardHeader>
-                  <CardTitle>Start Training</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground">
-                    Ready to begin your medical simulation training? Click below to start the interactive scenario.
-                  </p>
-
-                  <Button onClick={() => setIsModalOpen(true)} className="w-full" size="lg">
-                    <Play className="w-4 h-4 mr-2" />
-                    Begin Training
-                  </Button>
-                  
                 </CardContent>
               </Card>
             </div>

@@ -1,10 +1,17 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Header } from "@/components/header"
+import { VideoCallModal } from "@/components/video-call-modal"
 import Link from "next/link"
+import { useState } from "react"
 import { ArrowRight, Brain, Mic, Users, Shield, Clock, Award } from "lucide-react"
 
 export default function HomePage() {
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   return (
     <div className="min-h-screen relative">
       <Header />
@@ -37,19 +44,19 @@ export default function HomePage() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              <Link href="/demo">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="text-lg px-8 py-6 bg-white backdrop-blur-sm border-primary/30 cursor-pointer"
-                >
-                  <Mic className="w-5 h-5 mr-2" />
-                  Watch Demo
-                </Button>
-              </Link>
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                variant="outline"
+                size="lg"
+                className="text-lg px-8 py-6 bg-white backdrop-blur-sm border-primary/30 cursor-pointer"
+              >
+                <Mic className="w-5 h-5 mr-2" />
+                Watch Demo
+              </Button>
             </div>
-          </div>
+          </div> 
         </div>
+        <VideoCallModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </section>
 
       {/* Stats Section */}
