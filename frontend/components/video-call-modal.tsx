@@ -1,11 +1,26 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Mic, MicOff, Video, VideoOff, Phone, Settings, Users, MessageSquare, Volume2 } from "lucide-react"
+import {
+  Mic,
+  MicOff,
+  Video,
+  VideoOff,
+  Phone,
+  Settings,
+  Users,
+  MessageSquare,
+  Volume2,
+  X,
+} from "lucide-react"
 
 interface VideoCallModalProps {
   isOpen: boolean
@@ -43,12 +58,6 @@ const mockTranscript: TranscriptEntry[] = [
     speaker: "Elena Rodriguez",
     text: "Hi team, I have the latest analytics ready to share.",
     timestamp: "09:00:28",
-  },
-  {
-    id: "4",
-    speaker: "Sarah Chen",
-    text: "Perfect, let's start with the user engagement metrics.",
-    timestamp: "09:00:35",
   },
 ]
 
@@ -93,10 +102,7 @@ export function VideoCallModal({ isOpen, onClose }: VideoCallModalProps) {
     return () => clearInterval(interval)
   }, [isInCall])
 
-  const handleJoinCall = () => {
-    setIsInCall(true)
-  }
-
+  const handleJoinCall = () => setIsInCall(true)
   const handleEndCall = () => {
     setIsInCall(false)
     onClose()
@@ -104,92 +110,77 @@ export function VideoCallModal({ isOpen, onClose }: VideoCallModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-7xl h-[90vh] p-0 bg-card border-border">
-        <div className="flex h-full">
-          {/* Main Video Area */}
-          <div className="flex-1 flex flex-col bg-background">
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
-                  <span className="text-sm font-medium text-foreground">
-                    {isInCall ? "Live Meeting" : "Ready to Join"}
-                  </span>
-                </div>
-                <Badge variant="secondary" className="text-xs">
-                  <Users className="w-3 h-3 mr-1" />
-                  {mockParticipants.length} participants
-                </Badge>
-              </div>
-
+      <DialogContent className="max-w-7xl w-full h-[90vh] p-0 bg-card border-border flex rounded-2xl overflow-hidden">
+        {/* Main Video Area */}
+        <div className="flex-1 flex flex-col bg-background">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 border-b border-border">
+            <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm">
-                  <Settings className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <MessageSquare className="w-4 h-4" />
-                </Button>
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-sm font-medium text-foreground">
+                  {isInCall ? "Live Meeting" : "Ready to Join"}
+                </span>
               </div>
+              <Badge variant="secondary" className="text-xs">
+                <Users className="w-3 h-3 mr-1" />
+                {mockParticipants.length} participants
+              </Badge>
             </div>
 
-            {/* Video Grid */}
-            <div className="flex-1 p-6">
-              {!isInCall ? (
-                <div className="h-full flex items-center justify-center">
-                  <div className="text-center space-y-6">
-                    <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto">
-                      <Video className="w-12 h-12 text-muted-foreground" />
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-foreground">Ready to join?</h3>
-                      <p className="text-muted-foreground">
-                        Click join to start your video conference with real-time transcription
-                      </p>
-                    </div>
-                    <Button
-                      onClick={handleJoinCall}
-                      size="lg"
-                      className="bg-primary text-primary-foreground hover:bg-primary/90"
-                    >
-                      Join Call
-                    </Button>
-                  </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm">
+                <Settings className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="sm">
+                <MessageSquare className="w-4 h-4" />
+              </Button>
+              <DialogClose asChild>
+                <Button variant="ghost" size="icon">
+                  <X className="w-4 h-4" />
+                </Button>
+              </DialogClose>
+            </div>
+          </div>
+
+          {/* Video Grid */}
+          <div className="flex-1 p-6 flex items-center justify-center">
+            {!isInCall ? (
+              <div className="text-center space-y-6">
+                <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mx-auto">
+                  <Video className="w-12 h-12 text-muted-foreground" />
                 </div>
-              ) : (
-                <div className="h-full grid grid-cols-2 gap-4">
-                  {/* Main speaker (larger) */}
-                  <div className="col-span-2 bg-muted rounded-lg relative overflow-hidden h-2/3">
-                    <img
-                      src={mockParticipants[0].avatar || "/placeholder.svg"}
-                      alt={mockParticipants[0].name}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute bottom-4 left-4 bg-black/70 text-white px-3 py-1 rounded-md text-sm font-medium">
-                      {mockParticipants[0].name}
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <Badge variant="secondary" className="bg-green-500/20 text-green-400 border-green-500/30">
-                        Speaking
-                      </Badge>
-                    </div>
-                  </div>
-
-                  {/* Other participants */}
-                  <div className="bg-muted rounded-lg relative overflow-hidden">
-                    <img
-                      src={mockParticipants[1].avatar || "/placeholder.svg"}
-                      alt={mockParticipants[1].name}
-                      className="w-full h-full object-cover"
-                    />
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-foreground">Ready to join?</h3>
+                  <p className="text-muted-foreground">
+                    Click join to start your video conference with real-time transcription
+                  </p>
+                </div>
+                <Button
+                  onClick={handleJoinCall}
+                  size="lg"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  Join Call
+                </Button>
+              </div>
+            ) : (
+              <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-4">
+                {/* Top row */}
+                {mockParticipants.slice(0, 2).map((p) => (
+                  <div key={p.id} className="aspect-square bg-muted rounded-lg relative overflow-hidden">
+                    <img src={p.avatar} alt={p.name} className="w-full h-full object-cover" />
                     <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
-                      {mockParticipants[1].name}
+                      {p.name}
                     </div>
                   </div>
+                ))}
 
-                  <div className="bg-muted rounded-lg relative overflow-hidden">
+                {/* Bottom row: center single participant */}
+                <div className="col-span-2 flex justify-center">
+                  <div className="w-1/2 aspect-square bg-muted rounded-lg relative overflow-hidden">
                     <img
-                      src={mockParticipants[2].avatar || "/placeholder.svg"}
+                      src={mockParticipants[2].avatar}
                       alt={mockParticipants[2].name}
                       className="w-full h-full object-cover"
                     />
@@ -198,73 +189,73 @@ export function VideoCallModal({ isOpen, onClose }: VideoCallModalProps) {
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-
-            {/* Controls */}
-            {isInCall && (
-              <div className="p-4 border-t border-border bg-card">
-                <div className="flex items-center justify-center gap-4">
-                  <Button
-                    variant={isMuted ? "destructive" : "secondary"}
-                    size="lg"
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="rounded-full w-12 h-12"
-                  >
-                    {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-                  </Button>
-
-                  <Button
-                    variant={isVideoOff ? "destructive" : "secondary"}
-                    size="lg"
-                    onClick={() => setIsVideoOff(!isVideoOff)}
-                    className="rounded-full w-12 h-12"
-                  >
-                    {isVideoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
-                  </Button>
-
-                  <Button variant="destructive" size="lg" onClick={handleEndCall} className="rounded-full w-12 h-12">
-                    <Phone className="w-5 h-5" />
-                  </Button>
-                </div>
               </div>
             )}
           </div>
 
-          {/* Transcription Sidebar */}
-          <div className="w-80 bg-card border-l border-border flex flex-col">
-            <div className="p-4 border-b border-border">
-              <div className="flex items-center gap-2">
-                <Volume2 className="w-5 h-5 text-primary" />
-                <h3 className="font-semibold text-foreground">Live Transcription</h3>
+          {/* Controls */}
+          {isInCall && (
+            <div className="p-4 border-t border-border bg-card">
+              <div className="flex items-center justify-center gap-4">
+                <Button
+                  variant={isMuted ? "destructive" : "secondary"}
+                  size="lg"
+                  onClick={() => setIsMuted(!isMuted)}
+                  className="rounded-full w-12 h-12"
+                >
+                  {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                </Button>
+
+                <Button
+                  variant={isVideoOff ? "destructive" : "secondary"}
+                  size="lg"
+                  onClick={() => setIsVideoOff(!isVideoOff)}
+                  className="rounded-full w-12 h-12"
+                >
+                  {isVideoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
+                </Button>
+
+                <Button variant="destructive" size="lg" onClick={handleEndCall} className="rounded-full w-12 h-12">
+                  <Phone className="w-5 h-5" />
+                </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Real-time speech-to-text</p>
             </div>
+          )}
+        </div>
 
-            <ScrollArea className="flex-1 p-4">
-              <div className="space-y-4">
-                {transcript.map((entry) => (
-                  <div key={entry.id} className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-medium text-primary">{entry.speaker}</span>
-                      <span className="text-xs text-muted-foreground">{entry.timestamp}</span>
-                    </div>
-                    <p className="text-sm text-foreground leading-relaxed">{entry.text}</p>
-                  </div>
-                ))}
-
-                {isInCall && (
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-                    <span className="text-xs">Listening...</span>
-                  </div>
-                )}
-              </div>
-            </ScrollArea>
-
-            <div className="p-4 border-t border-border">
-              <div className="text-xs text-muted-foreground text-center">Transcription powered by AI</div>
+        {/* Transcription Sidebar */}
+        <div className="w-80 bg-card border-l border-border flex flex-col">
+          <div className="p-4 border-b border-border">
+            <div className="flex items-center gap-2">
+              <Volume2 className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold text-foreground">Live Transcription</h3>
             </div>
+            <p className="text-xs text-muted-foreground mt-1">Real-time speech-to-text</p>
+          </div>
+
+          <ScrollArea className="flex-1 p-4">
+            <div className="space-y-4">
+              {transcript.map((entry) => (
+                <div key={entry.id} className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-primary">{entry.speaker}</span>
+                    <span className="text-xs text-muted-foreground">{entry.timestamp}</span>
+                  </div>
+                  <p className="text-sm text-foreground leading-relaxed">{entry.text}</p>
+                </div>
+              ))}
+
+              {isInCall && (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                  <span className="text-xs">Listening...</span>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+
+          <div className="p-4 border-t border-border">
+            <div className="text-xs text-muted-foreground text-center">Transcription powered by AI</div>
           </div>
         </div>
       </DialogContent>

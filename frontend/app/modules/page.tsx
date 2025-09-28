@@ -27,7 +27,7 @@ const trainingModules = [
     category: "Communication",
     context:
       "Navigate complex conversations with patients who are anxious, angry, or receiving difficult diagnoses. Practice maintaining professionalism while showing compassion.",
-    isLocked: false,
+    isLocked: true,
   },
   {
     id: "diagnostic-reasoning",
@@ -36,7 +36,7 @@ const trainingModules = [
     category: "Diagnostics",
     context:
       "Work through complex cases where symptoms could indicate multiple conditions. Practice systematic diagnostic thinking and evidence-based decision making.",
-    isLocked: false,
+    isLocked: true,
   },
   {
     id: "pediatric-care",
@@ -91,8 +91,8 @@ export default function ModulesPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2 gradient-text">Training Modules</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-3xl font-bold mb-2 text-black">Training Modules</h1>
+          <p className="text-black">
             Choose from our comprehensive library of medical simulation training modules
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function ModulesPage() {
               onClick={() => setSelectedCategory(category)}
               className={
                 selectedCategory === category
-                  ? "bg-gradient-to-r from-blue-500 via-purple-600 to-blue-700 hover:from-blue-600 hover:via-purple-700 hover:to-blue-800"
+                  ? "bg-[#5A8FD8] cursor-pointer border border-primary/30"
                   : "backdrop-blur-sm border-primary/30"
               }
             >
@@ -139,14 +139,14 @@ export default function ModulesPage() {
                     className={
                       module.isLocked
                         ? "w-full"
-                        : "w-full bg-gradient-to-r from-blue-500 via-purple-600 to-blue-700 hover:from-blue-600 hover:via-purple-700 hover:to-blue-800"
+                        : "w-full bg-gradient-to-r from-[#60adecff] via-[#5A8FD8] to-[#3e4175ff] hover:from-[#60adecff] hover:via-[#5A8FD8] hover:to-[#3e4175ff] cursor-pointer"
                     }
                     disabled={module.isLocked}
                   >
                     {module.isLocked ? (
                       <>
                         <Lock className="w-4 h-4 mr-2" />
-                        Upgrade to Access
+                        Coming Soon...
                       </>
                     ) : (
                       <>
