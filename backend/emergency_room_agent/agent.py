@@ -1,6 +1,7 @@
 from google.adk.agents import Agent
 from .sub_agents.doctor_agent.agent import doctor_agent
 from .sub_agents.nurse_agent.agent import nurse_agent
+from .sub_agents.evaluator_agent.agent import evaluator_agent
 
 MODEL_GEMINI_2_0_FLASH = "gemini-2.0-flash"
 
@@ -29,6 +30,12 @@ root_agent = Agent(
             2. Nurse Agent
             - Direct to nurse for less serious medical issues, general health questions, or questions about the patient
 
+            3. Evaluator Agent
+            - Direct to evaluator for performance evaluation
+
+            After the evaluator agent has provided a final debriefing, you should thank the user for their time and tell them that the training is complete.
+            You should also tell the user that they can now exit the training.
+
 
             Always maintain a helpful and professional tone. If you're unsure which agent to delegate to,
             ask clarifying questions to better understand the user's needs.
@@ -40,6 +47,6 @@ root_agent = Agent(
 
             **Important:** For simple questions like "what's my name", delegate to the nurse agent.
             """,
-            sub_agents=[doctor_agent, nurse_agent],
+            sub_agents=[doctor_agent, nurse_agent, evaluator_agent],
             tools=[],
 )
