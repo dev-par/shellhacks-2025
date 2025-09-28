@@ -8,13 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Header } from "@/components/header"
-import { AuthProvider, useAuth } from "@/components/auth-context"
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 
 function SignupContent() {
-  const { login, isLoading } = useAuth()
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: "",
@@ -24,28 +22,6 @@ function SignupContent() {
   })
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match")
-      return
-    }
-
-    if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters")
-      return
-    }
-
-    const success = await login(formData.email, formData.password)
-    if (success) {
-      router.push("/modules")
-    } else {
-      setError("Failed to create account")
-    }
-  }
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -63,7 +39,7 @@ function SignupContent() {
               <p className="text-muted-foreground">Start your medical training journey today</p>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
                   <div className="relative">
@@ -143,9 +119,6 @@ function SignupContent() {
 
                 {error && <div className="text-sm text-destructive">{error}</div>}
 
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? "Creating Account..." : "Create Account"}
-                </Button>
               </form>
 
               <div className="mt-6 text-center text-sm">
@@ -164,8 +137,6 @@ function SignupContent() {
 
 export default function SignupPage() {
   return (
-    <AuthProvider>
       <SignupContent />
-    </AuthProvider>
   )
 }

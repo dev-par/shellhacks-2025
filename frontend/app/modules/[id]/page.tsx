@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
-import { AuthProvider, useAuth } from "@/components/auth-context"
 import { AnimatedBackground } from "@/components/animated-background"
 import { Play, ArrowLeft, CheckCircle, Lock } from "lucide-react"
 import Link from "next/link"
@@ -82,33 +81,9 @@ const moduleData = {
 }
 
 function ModuleDetailContent() {
-  const { user } = useAuth()
   const params = useParams()
   const moduleId = params.id as string
   const module = moduleData[moduleId as keyof typeof moduleData]
-
-  if (!user) {
-    return (
-      <div className="min-h-screen relative">
-        <AnimatedBackground />
-        <div className="relative z-10">
-          <Header />
-          <div className="container mx-auto px-4 py-20">
-            <div className="max-w-md mx-auto text-center">
-              <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-6 backdrop-blur-sm">
-                <Lock className="w-8 h-8 text-primary" />
-              </div>
-              <h1 className="text-2xl font-bold mb-4">Authentication Required</h1>
-              <p className="text-muted-foreground mb-6">Please sign in to access this training module.</p>
-              <Link href="/login">
-                <Button size="lg">Sign In to Continue</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   if (!module) {
     return (
@@ -232,8 +207,6 @@ function ModuleDetailContent() {
 
 export default function ModuleDetailPage() {
   return (
-    <AuthProvider>
       <ModuleDetailContent />
-    </AuthProvider>
   )
 }
