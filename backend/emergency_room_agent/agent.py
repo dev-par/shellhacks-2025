@@ -6,7 +6,7 @@ from .sub_agents.nurse_agent.agent import nurse_agent
 
 MODEL_GEMINI_2_0_FLASH = "gemini-2.0-flash"
 
-root_agent = Agent(
+emergency_room_agent = Agent(
         name="emergency_room_agent",
         model=MODEL_GEMINI_2_0_FLASH,
         description="EMERGENCY ROOM AGENT who handles emergency room consultations and supervises trainee handovers.",
