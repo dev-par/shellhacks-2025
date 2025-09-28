@@ -71,7 +71,7 @@ async def main():
     )
 
  # ===== PART 5: Interactive Conversation Loop =====
-    print("\nWelcome to Customer Service Chat!")
+    print("\nWelcome to the Emergency Room Training!")
     print("Type 'exit' or 'quit' to end the conversation.\n")
 
     while True:

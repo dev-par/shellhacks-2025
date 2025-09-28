@@ -95,7 +95,7 @@ async def display_state(
 async def process_agent_response(event):
     """Process and display agent response events."""
     # Log basic event info
-    print(f"Event ID: {event.id}, Author: {event.author}")
+    #print(f"Event ID: {event.id}, Author: {event.author}")
 
     # Check for specific parts first
     has_specific_part = False
@@ -156,6 +156,7 @@ async def call_agent_async(runner, user_id, session_id, query):
     final_response_text = None
 
     # Display state before processing
+    """
     await display_state(
         runner.session_service,
         runner.app_name,
@@ -163,6 +164,7 @@ async def call_agent_async(runner, user_id, session_id, query):
         session_id,
         "State BEFORE processing",
     )
+    """
 
     try:
         async for event in runner.run_async(
@@ -176,6 +178,7 @@ async def call_agent_async(runner, user_id, session_id, query):
         print(f"Error during agent call: {e}")
 
     # Display state after processing the message
+    """
     await display_state(
         runner.session_service,
         runner.app_name,
@@ -183,5 +186,6 @@ async def call_agent_async(runner, user_id, session_id, query):
         session_id,
         "State AFTER processing",
     )
+    """
 
     return final_response_text
