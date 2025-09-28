@@ -10,46 +10,49 @@ from utils import call_agent_async
 
 load_dotenv()
 
+# Create a new session service to store state
+session_service_stateful = InMemorySessionService()
+
+initial_state = {
+    "states": {
+        'current_stage': 0,
+        'stages': ['S0_INITIAL_STABILIZATION', 'S1_DIAGNOSTIC_CONFIRMATION', 'S2_CRITICAL_CONSULTATION', 'S3_SENIOR_HANDOVER', 'S4_DEBRIEFING']
+    },
+    "patient_information": {
+        "patient_name": "Brandon Hancock",
+        "patient_age": 55,
+        "static_patient_data": {
+        "vitals_snapshot": {
+            "BP_Systolic": 118,
+            "BP_Diastolic": 75,
+            "HR": 105,
+            "O2_Sat": 94,
+            "O2_Source": "Room Air",
+            "Pain_Score": 8
+        },
+        "history": {
+            "Age_Sex": "55-year-old male",
+            "Complaint": "Crushing substernal chest pain",
+            "Known_History": "Hypertension, Smoker",
+            "Allergies": "None known"
+        }
+        }
+    },
+    "session_flags": {
+        "protocol_asa_given": False,
+        "protocol_ecg_ordered": False,
+        "protocol_diagnosis_confirmed": False,
+        "protocol_nitro_or_morphine": False
+    }
+}
 
 async def main():
-    # Create a new session service to store state
-    session_service_stateful = InMemorySessionService()
-
-    initial_state = {
-        "patient_information": {
-            "patient_name": "Brandon Hancock",
-            "patient_age": 55,
-            "static_patient_data": {
-            "vitals_snapshot": {
-                "BP_Systolic": 118,
-                "BP_Diastolic": 75,
-                "HR": 105,
-                "O2_Sat": 94,
-                "O2_Source": "Room Air",
-                "Pain_Score": 8
-            },
-            "history": {
-                "Age_Sex": "55-year-old male",
-                "Complaint": "Crushing substernal chest pain",
-                "Known_History": "Hypertension, Smoker",
-                "Allergies": "None known"
-            }
-            }
-        },
-        "session_flags": {
-            "ecg_timer_running": False,
-            "protocol_asa_given": False,
-            "protocol_ecg_ordered": False,
-            "protocol_diagnosis_confirmed": False,
-            "protocol_nitro_or_morphine": False
-        }
-    }
-
 
     # Create a NEW session
     APP_NAME = "Brandon Bot"
     USER_ID = "brandon_hancock"
     SESSION_ID = str(uuid.uuid4())
+    initial_state["session_id"] = SESSION_ID
 
 
     stateful_session = await session_service_stateful.create_session(
