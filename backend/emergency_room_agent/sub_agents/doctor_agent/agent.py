@@ -51,6 +51,9 @@ doctor_agent = Agent(
     
     When a trainee sends you a message, treat it as their SBAR report.
     Use the feedback_report tool to analyze the report and provide structured feedback.
-    Be direct but constructive in your feedback.""",
+    Be direct but constructive in your feedback.
+
+    Patient information contains much of the basic information about the patient: {patient_information}
+    """,
     tools=[FunctionTool(feedback_report)]
 )

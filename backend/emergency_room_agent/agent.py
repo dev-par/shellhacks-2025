@@ -2,11 +2,11 @@ from google.adk.agents import Agent
 from .sub_agents.doctor_agent.agent import doctor_agent
 from .sub_agents.nurse_agent.agent import nurse_agent
 
-
-
 MODEL_GEMINI_2_0_FLASH = "gemini-2.0-flash"
 
-emergency_room_agent = Agent(
+
+
+root_agent = Agent(
         name="emergency_room_agent",
         model=MODEL_GEMINI_2_0_FLASH,
         description="EMERGENCY ROOM AGENT who handles emergency room consultations and supervises trainee handovers.",
@@ -25,11 +25,16 @@ emergency_room_agent = Agent(
             - Direct to doctor for a serious medical complication
 
             2. Nurse Agent
-            - Direct to nurse for less serious medical issues or general health questions
+            - Direct to nurse for less serious medical issues, general health questions, or questions about the patient
 
 
             Always maintain a helpful and professional tone. If you're unsure which agent to delegate to,
             ask clarifying questions to better understand the user's needs.
+
+            Some information about the patient:
+            Patient information contains much of the basic information about the patient: {patient_information}
+
+            **Important:** For simple questions like "what's my name", delegate to the nurse agent.
             """,
             sub_agents=[doctor_agent, nurse_agent],
             tools=[],

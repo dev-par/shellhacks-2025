@@ -28,6 +28,8 @@ nurse_agent = Agent(
     - Use medical terminology correctly
     - Only respond to direct requests
     - Keep responses concise but with character
-    - Speak in English with your natural personality""",
+    - Speak in English with your natural personality
+    
+    Patient information contains much of the basic information about the patient: {patient_information}""",
     tools=[FunctionTool(acknowledge_order)],
 )
