@@ -55,9 +55,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-xl text-muted-foreground text-balance mb-8 max-w-2xl mx-auto leading-relaxed">
-                Empower early-career doctors with realistic AI voice
-                simulations, real-time feedback, and comprehensive training
-                modules designed by medical experts.
+                Interactive medical simulations and training modules designed by experts to help you build confidence and skills.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -138,11 +136,10 @@ export default function HomePage() {
                   <Mic className="w-6 h-6 text-primary" />
                 </div>
                 <h3 className="text-xl font-semibold mb-3 gradient-text-alt">
-                  Voice AI Simulation
+                  Interactive Patient Scenarios
                 </h3>
                 <p className="text-muted-foreground">
-                  Realistic patient interactions with advanced voice AI that
-                  responds naturally to your medical inquiries and decisions.
+                  Engage in realistic medical cases to improve decision-making and patient care skills.
                 </p>
               </CardContent>
             </Card>
