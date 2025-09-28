@@ -37,50 +37,30 @@ export function ChatModal({
   currentUserName = "You",
   currentUserAvatar,
 }: ChatModalProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      text: "Hey! Are you here?",
-      sender: "other",
-      timestamp: new Date(Date.now() - 300000),
-      senderName: recipientName,
-      senderAvatar: recipientAvatar,
-    },
-    {
-      id: "2",
-      text: "Yeah...",
-      sender: "user",
-      timestamp: new Date(Date.now() - 240000),
-      senderName: currentUserName,
-      senderAvatar: currentUserAvatar,
-    },
-    {
-      id: "3",
-      text: "Great work on the slides! Love it! Just one more thing...",
-      sender: "other",
-      timestamp: new Date(Date.now() - 180000),
-      senderName: recipientName,
-      senderAvatar: recipientAvatar,
-    },
-  ])
-
+  const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
+  // Scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
+  // Reset messages whenever modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setMessages([]) // Reset chat
+      if (inputRef.current) inputRef.current.focus()
+      // Small timeout to ensure DOM renders before scrolling
+      setTimeout(scrollToBottom, 50)
+    }
+  }, [isOpen])
+
+  // Scroll whenever messages change
   useEffect(() => {
     scrollToBottom()
   }, [messages])
-
-  useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus()
-    }
-  }, [isOpen])
 
   const handleSendMessage = () => {
     if (!newMessage.trim()) return
